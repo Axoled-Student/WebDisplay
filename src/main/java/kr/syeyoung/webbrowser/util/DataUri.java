@@ -4,7 +4,8 @@
 
 package kr.syeyoung.webbrowser.util;
 
-import javax.xml.bind.DatatypeConverter;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 /**
  * Utility class for creating data: URIs that can be passed to CefBrowser.loadURL.
@@ -12,6 +13,6 @@ import javax.xml.bind.DatatypeConverter;
 public class DataUri {
     public static String create(String mimeType, String contents) {
         return "data:" + mimeType + ";base64,"
-                + DatatypeConverter.printBase64Binary(contents.getBytes());
+                + Base64.getEncoder().encodeToString(contents.getBytes(StandardCharsets.UTF_8));
     }
 };

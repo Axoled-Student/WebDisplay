@@ -63,40 +63,44 @@ public class ColorHelper {
     }
 
     public static Color chatColorToColor(net.md_5.bungee.api.ChatColor color) {
-        switch(color) {
-            case RED:
-                return RED;
-            case AQUA:
-                return AQUA;
-            case BLUE:
-                return BLUE;
-            case BLACK:
-                return BLACK;
-            case GOLD:
-                return GOLD;
-            case GRAY:
-                return GRAY;
-            case GREEN:
-                return GREEN;
-            case WHITE:
-                return WHITE;
-            case YELLOW:
-                return YELLOW;
-            case DARK_RED:
-                return DARK_RED;
-            case DARK_AQUA:
-                return DARK_AQUA;
-            case DARK_BLUE:
-                return DARK_BLUE;
-            case DARK_GREEN:
-                return DARK_GREEN;
-            case DARK_GRAY:
-                return DARK_GRAY;
-            case DARK_PURPLE:
-                return DARK_PURPLE;
-            case LIGHT_PURPLE:
-                return LIGHT_PURPLE;
+        if (color == null) {
+            return null;
         }
-        return null;
+        switch (color.getName().toLowerCase()) {
+            case "red":
+                return RED;
+            case "aqua":
+                return AQUA;
+            case "blue":
+                return BLUE;
+            case "black":
+                return BLACK;
+            case "gold":
+                return GOLD;
+            case "gray":
+                return GRAY;
+            case "green":
+                return GREEN;
+            case "white":
+                return WHITE;
+            case "yellow":
+                return YELLOW;
+            case "dark_red":
+                return DARK_RED;
+            case "dark_aqua":
+                return DARK_AQUA;
+            case "dark_blue":
+                return DARK_BLUE;
+            case "dark_green":
+                return DARK_GREEN;
+            case "dark_gray":
+                return DARK_GRAY;
+            case "dark_purple":
+                return DARK_PURPLE;
+            case "light_purple":
+                return LIGHT_PURPLE;
+            default:
+                return null;
+        }
     }
 }

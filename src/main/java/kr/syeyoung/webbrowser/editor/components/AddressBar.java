@@ -105,7 +105,7 @@ public class AddressBar extends MapWidget {
         @Override
         public void onActivate() {
             if (!mapBrowser.getKeyboardMap().containsKey(getLastClicker()))
-                mapBrowser.getKeyboardMap().put(getLastClicker(), new Keyboard(mapBrowser,getDisplay().getMapInfo().uuid, getLastClicker()));
+                mapBrowser.getKeyboardMap().put(getLastClicker(), new Keyboard(mapBrowser, getDisplay().getMapInfo().getUniqueId(), getLastClicker()));
             mapBrowser.getKeyboardMap().get(getLastClicker()).sendKeyboard();
         }
     };

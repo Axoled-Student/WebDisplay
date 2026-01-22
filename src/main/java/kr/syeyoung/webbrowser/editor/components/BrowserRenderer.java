@@ -5,46 +5,93 @@ import com.bergerkiller.bukkit.common.events.map.MapClickEvent;
 import com.bergerkiller.bukkit.common.map.MapColorPalette;
 import com.bergerkiller.bukkit.common.map.widgets.MapWidget;
 import com.google.common.base.Preconditions;
-import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.GL3;
-import com.jogamp.opengl.awt.GLCanvas;
-import com.jogamp.opengl.util.GLBuffers;
-import com.sun.awt.AWTUtilities;
-import com.sun.jmx.remote.internal.ArrayQueue;
+import org.cef.browser.CefBrowserOsrWithHandler;
 import kr.syeyoung.webbrowser.PluginWebBrowser;
 import kr.syeyoung.webbrowser.editor.MapClickListener;
-import org.bukkit.plugin.java.annotation.plugin.Plugin;
 import org.cef.browser.CefBrowser;
-import org.cef.browser.CefBrowserOsr;
 import org.cef.callback.CefDragData;
 import org.cef.handler.CefRenderHandler;
 import org.cef.handler.CefScreenInfo;
-import org.w3c.dom.css.Rect;
 
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.List;
 import java.util.logging.Level;
 
-import static com.jogamp.opengl.GL.*;
 
 public class BrowserRenderer extends MapWidget implements CefRenderHandler, MapClickListener {
-    private CefBrowserOsr browser;
+    private CefBrowserOsrWithHandler browser;
     private boolean firstRender = false;
 
 
-    public BrowserRenderer(CefBrowser browser) {
-        this.browser = (CefBrowserOsr) browser;
-        this.browser.renderHandler = this;
+    public BrowserRenderer() {
         setFocusable(true);
+    }
+
+    public BrowserRenderer(CefBrowser browser) {
+        this();
+        attachBrowser(browser);
+    }
+
+    public void attachBrowser(CefBrowser browser) {
+        this.browser = (CefBrowserOsrWithHandler) browser;
+    }
+
+    public static CefRenderHandler createRendererHandle(BrowserRenderer renderer) {
+        return new CefRenderHandler() {
+            @Override
+            public Rectangle getViewRect(CefBrowser cefBrowser) {
+                return renderer.getViewRect(cefBrowser);
+            }
+
+            @Override
+            public boolean getScreenInfo(CefBrowser cefBrowser, CefScreenInfo cefScreenInfo) {
+                return renderer.getScreenInfo(cefBrowser, cefScreenInfo);
+            }
+
+            @Override
+            public Point getScreenPoint(CefBrowser cefBrowser, Point viewPoint) {
+                return renderer.getScreenPoint(cefBrowser, viewPoint);
+            }
+
+            @Override
+            public double getDeviceScaleFactor(CefBrowser cefBrowser) {
+                return 1.0;
+            }
+
+            @Override
+            public void onPopupShow(CefBrowser cefBrowser, boolean b) {
+                renderer.onPopupShow(cefBrowser, b);
+            }
+
+            @Override
+            public void onPopupSize(CefBrowser cefBrowser, Rectangle rectangle) {
+                renderer.onPopupSize(cefBrowser, rectangle);
+            }
+
+            @Override
+            public void onPaint(CefBrowser cefBrowser, boolean b, Rectangle[] rectangles, ByteBuffer byteBuffer, int i, int i1) {
+                renderer.onPaint(cefBrowser, b, rectangles, byteBuffer, i, i1);
+            }
+
+            @Override
+            public boolean onCursorChange(CefBrowser cefBrowser, int i) {
+                return renderer.onCursorChange(cefBrowser, i);
+            }
+
+            @Override
+            public boolean startDragging(CefBrowser cefBrowser, CefDragData cefDragData, int i, int i1, int i2) {
+                return renderer.startDragging(cefBrowser, cefDragData, i, i1, i2);
+            }
+
+            @Override
+            public void updateDragCursor(CefBrowser cefBrowser, int i) {
+                renderer.updateDragCursor(cefBrowser, i);
+            }
+        };
     }
 
 
@@ -56,13 +103,17 @@ public class BrowserRenderer extends MapWidget implements CefRenderHandler, MapC
     @Override
     public void onFocus() {
         super.onFocus();
-        browser.setFocus(true);
+        if (browser != null) {
+            browser.setFocus(true);
+        }
     }
 
     @Override
     public void onBlur() {
         super.onBlur();
-        browser.setFocus(false);
+        if (browser != null) {
+            browser.setFocus(false);
+        }
     }
 
     @Override
@@ -70,14 +121,18 @@ public class BrowserRenderer extends MapWidget implements CefRenderHandler, MapC
         super.onAttached();
         viewRect.setSize(getWidth(), getHeight());
         invalidate();
-        this.browser.setFocus(true);
-        this.browser.wasResized(getWidth(), getHeight());
+        if (browser != null) {
+            this.browser.setFocus(true);
+            this.browser.wasResized(getWidth(), getHeight());
+        }
     }
 
     @Override
     public void onBoundsChanged() {
         viewRect.setSize(getWidth(), getHeight());
-        browser.wasResized(getWidth(), getHeight());
+        if (browser != null) {
+            browser.wasResized(getWidth(), getHeight());
+        }
     }
 
     @Override
@@ -142,7 +197,9 @@ public class BrowserRenderer extends MapWidget implements CefRenderHandler, MapC
     }
 
     public void sendMouseEvent(MouseEvent mouseEvent) {
-        browser.sendMouseEvent(mouseEvent);
+        if (browser != null) {
+            browser.sendMouseEvent(mouseEvent);
+        }
     }
     
     private static final Point dummyPoint = new Point(0,0);
@@ -163,7 +220,7 @@ public class BrowserRenderer extends MapWidget implements CefRenderHandler, MapC
 
     @Override
     public boolean getScreenInfo(CefBrowser cefBrowser, CefScreenInfo cefScreenInfo) {
-        return browser.getScreenInfo(cefBrowser, cefScreenInfo);
+        return false;
     }
 
     @Override
@@ -171,6 +228,11 @@ public class BrowserRenderer extends MapWidget implements CefRenderHandler, MapC
         Point screenPoint = new Point(this.screenPoint);
         screenPoint.translate(viewPoint.x, viewPoint.y);
         return screenPoint;
+    }
+
+    @Override
+    public double getDeviceScaleFactor(CefBrowser cefBrowser) {
+        return 1.0;
     }
 
     @Override
@@ -235,7 +297,6 @@ public class BrowserRenderer extends MapWidget implements CefRenderHandler, MapC
         // yay fun stuff
         FrameData fd = lastFrameData;
         synchronized (lastFrameData) {
-            }
             fd.rectangles.addAll(Arrays.asList(rectangles));
             int size = (i * i1) << 2;
             if (fd.buffer == null || size != fd.buffer.capacity()) //This only happens when the browser gets resized
@@ -253,8 +314,8 @@ public class BrowserRenderer extends MapWidget implements CefRenderHandler, MapC
     }
 
     @Override
-    public void onCursorChange(CefBrowser cefBrowser, int i) {
-
+    public boolean onCursorChange(CefBrowser cefBrowser, int i) {
+        return false;
     }
 
     @Override
