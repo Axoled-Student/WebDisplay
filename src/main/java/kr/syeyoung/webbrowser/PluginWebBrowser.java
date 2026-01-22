@@ -27,7 +27,7 @@ import java.util.UUID;
 import java.util.logging.Logger;
 
 @Plugin(name = "WebBrowser", version = "0.0.1")
-@ApiVersion(ApiVersion.Target.v1_21)
+@ApiVersion("1.21")
 @Description("Fun experiment")
 @Author("syeyoung (cyoung06@naver.com)")
 @Dependency("BKCommonLib")
