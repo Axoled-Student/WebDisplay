@@ -8,7 +8,6 @@ import org.cef.callback.CefSchemeRegistrar;
 import org.cef.handler.CefAppHandlerAdapter;
 import org.cef.handler.CefResourceHandler;
 import org.cef.network.CefRequest;
-import tests.detailed.handler.ClientSchemeHandler;
 
 public class AppHandler extends CefAppHandlerAdapter {
     public AppHandler(String[] args) {

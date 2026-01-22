@@ -10,8 +10,6 @@ import org.cef.callback.CefContextMenuParams;
 import org.cef.callback.CefMenuModel;
 import org.cef.callback.CefMenuModel.MenuId;
 import org.cef.handler.CefContextMenuHandler;
-import tests.detailed.dialog.SearchDialog;
-import tests.detailed.dialog.ShowTextDialog;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -68,13 +66,10 @@ public class ContextMenuHandler implements CefContextMenuHandler {
                                         CefContextMenuParams params, int commandId, int eventFlags) {
         switch (commandId) {
             case MenuId.MENU_ID_VIEW_SOURCE:
-                ShowTextDialog visitor =
-                        new ShowTextDialog(owner_, "Source of \"" + browser.getURL() + "\"");
-                browser.getSource(visitor);
+                browser.viewSource();
                 return true;
             case MenuId.MENU_ID_FIND:
-                SearchDialog search = new SearchDialog(owner_, browser);
-                search.setVisible(true);
+                browser.find("", true, false, false);
                 return true;
             case MenuId.MENU_ID_USER_FIRST:
                 browser.startDownload(params.getSourceUrl());

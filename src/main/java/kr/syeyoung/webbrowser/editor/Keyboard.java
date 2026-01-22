@@ -9,8 +9,6 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Player;
 import org.cef.CefClient;
 import org.cef.browser.CefBrowser;
-import org.cef.browser.CefBrowserOsr;
-import sun.awt.AWTAccessor;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
@@ -140,9 +138,7 @@ public class Keyboard {
 
     public KeyEvent createKeyEvent(int event, int keyCode, char keyChar, int extended,int primaryUnicode, int rawCode) {
         KeyEvent ev =  new KeyEvent(BrowserRenderer.dummy, event, System.currentTimeMillis(), getMask(), keyCode, keyChar, event != KeyEvent.KEY_TYPED ? KeyEvent.KEY_LOCATION_STANDARD : KeyEvent.KEY_LOCATION_UNKNOWN);
-        AWTAccessor.getKeyEventAccessor().setExtendedKeyCode(ev, extended);
-        AWTAccessor.getKeyEventAccessor().setPrimaryLevelUnicode(ev, primaryUnicode);
-        AWTAccessor.getKeyEventAccessor().setRawCode(ev, rawCode);
+        ev.setExtendedKeyCode(extended);
 
         if (keyChar == '\b' && f != null && event != KeyEvent.KEY_TYPED) {
             try {
@@ -163,7 +159,7 @@ public class Keyboard {
 
     public void sendEvent(KeyEvent event) {
         if (browser.getActiveTab() != null)
-            ((CefBrowserOsr)browser.getActiveTab().getCefBrowser()).sendKeyEvent(event);
+            browser.getActiveTab().getCefBrowser().sendKeyEvent(event);
     }
 
     public int getMask() {
