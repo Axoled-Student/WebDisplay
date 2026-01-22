@@ -1,6 +1,9 @@
 # WebDisplay
 A minecraft plugin providing web browsing feature
 
+# Minecraft Version Support
+- Built against Minecraft 1.21.11 (Spigot API 1.21.11-R0.2-SNAPSHOT) and BKCommonLib 1.21.11-v1.
+
 # Commands
 `/webdisplay`: gives the player webdisplay map
 
