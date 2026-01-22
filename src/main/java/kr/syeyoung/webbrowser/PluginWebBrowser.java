@@ -14,6 +14,7 @@ import org.bukkit.plugin.java.annotation.command.Command;
 import org.bukkit.plugin.java.annotation.command.Commands;
 import org.bukkit.plugin.java.annotation.dependency.Dependency;
 import org.bukkit.plugin.java.annotation.plugin.Description;
+import org.bukkit.plugin.java.annotation.plugin.ApiVersion;
 import org.bukkit.plugin.java.annotation.plugin.Plugin;
 import org.bukkit.plugin.java.annotation.plugin.author.Author;
 import org.cef.CefApp;
@@ -26,6 +27,7 @@ import java.util.UUID;
 import java.util.logging.Logger;
 
 @Plugin(name = "WebBrowser", version = "0.0.1")
+@ApiVersion(ApiVersion.Target.v1_21)
 @Description("Fun experiment")
 @Author("syeyoung (cyoung06@naver.com)")
 @Dependency("BKCommonLib")
@@ -38,9 +40,6 @@ public class PluginWebBrowser extends JavaPlugin {
     public static final Logger LOGGER = Logger.getLogger("Minecraft");
 
     public void onEnable() {
-        getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
-            getServer().broadcastMessage("§b[Web Display] §fThis server uses a web display plugin made by §asyeyoung (cyoung06@naver.com)");
-        }, 0L, 20L * 60L *5L);
         SystemBootstrap.setLoader(NativeLib.loader);
 
 
