@@ -27,55 +27,71 @@ public class BrowserRenderer extends MapWidget implements CefRenderHandler, MapC
     private boolean firstRender = false;
 
 
-    public BrowserRenderer(CefBrowser browser) {
-        this.browser = (CefBrowserOsrWithHandler) browser;
+    public BrowserRenderer() {
         setFocusable(true);
+    }
+
+    public BrowserRenderer(CefBrowser browser) {
+        this();
+        attachBrowser(browser);
     }
 
     public void attachBrowser(CefBrowser browser) {
         this.browser = (CefBrowserOsrWithHandler) browser;
     }
 
-    public static class PlaceholderRenderHandler implements CefRenderHandler {
-        @Override
-        public Rectangle getViewRect(CefBrowser cefBrowser) {
-            return new Rectangle(0, 0, 0, 0);
-        }
+    public static CefRenderHandler createRendererHandle(BrowserRenderer renderer) {
+        return new CefRenderHandler() {
+            @Override
+            public Rectangle getViewRect(CefBrowser cefBrowser) {
+                return renderer.getViewRect(cefBrowser);
+            }
 
-        @Override
-        public boolean getScreenInfo(CefBrowser cefBrowser, CefScreenInfo cefScreenInfo) {
-            return false;
-        }
+            @Override
+            public boolean getScreenInfo(CefBrowser cefBrowser, CefScreenInfo cefScreenInfo) {
+                return renderer.getScreenInfo(cefBrowser, cefScreenInfo);
+            }
 
-        @Override
-        public Point getScreenPoint(CefBrowser cefBrowser, Point viewPoint) {
-            return viewPoint;
-        }
+            @Override
+            public Point getScreenPoint(CefBrowser cefBrowser, Point viewPoint) {
+                return renderer.getScreenPoint(cefBrowser, viewPoint);
+            }
 
-        @Override
-        public void onPopupShow(CefBrowser cefBrowser, boolean b) {
-        }
+            @Override
+            public double getDeviceScaleFactor(CefBrowser cefBrowser) {
+                return 1.0;
+            }
 
-        @Override
-        public void onPopupSize(CefBrowser cefBrowser, Rectangle rectangle) {
-        }
+            @Override
+            public void onPopupShow(CefBrowser cefBrowser, boolean b) {
+                renderer.onPopupShow(cefBrowser, b);
+            }
 
-        @Override
-        public void onPaint(CefBrowser cefBrowser, boolean b, Rectangle[] rectangles, ByteBuffer byteBuffer, int i, int i1) {
-        }
+            @Override
+            public void onPopupSize(CefBrowser cefBrowser, Rectangle rectangle) {
+                renderer.onPopupSize(cefBrowser, rectangle);
+            }
 
-        @Override
-        public void onCursorChange(CefBrowser cefBrowser, int i) {
-        }
+            @Override
+            public void onPaint(CefBrowser cefBrowser, boolean b, Rectangle[] rectangles, ByteBuffer byteBuffer, int i, int i1) {
+                renderer.onPaint(cefBrowser, b, rectangles, byteBuffer, i, i1);
+            }
 
-        @Override
-        public boolean startDragging(CefBrowser cefBrowser, CefDragData cefDragData, int i, int i1, int i2) {
-            return false;
-        }
+            @Override
+            public boolean onCursorChange(CefBrowser cefBrowser, int i) {
+                return renderer.onCursorChange(cefBrowser, i);
+            }
 
-        @Override
-        public void updateDragCursor(CefBrowser cefBrowser, int i) {
-        }
+            @Override
+            public boolean startDragging(CefBrowser cefBrowser, CefDragData cefDragData, int i, int i1, int i2) {
+                return renderer.startDragging(cefBrowser, cefDragData, i, i1, i2);
+            }
+
+            @Override
+            public void updateDragCursor(CefBrowser cefBrowser, int i) {
+                renderer.updateDragCursor(cefBrowser, i);
+            }
+        };
     }
 
 
@@ -215,6 +231,11 @@ public class BrowserRenderer extends MapWidget implements CefRenderHandler, MapC
     }
 
     @Override
+    public double getDeviceScaleFactor(CefBrowser cefBrowser) {
+        return 1.0;
+    }
+
+    @Override
     public void onPopupShow(CefBrowser cefBrowser, boolean b) {
         PluginWebBrowser.LOGGER.log(Level.FINE, cefBrowser +" / " + cefBrowser.getURL() + " / "+b);
     }
@@ -293,8 +314,8 @@ public class BrowserRenderer extends MapWidget implements CefRenderHandler, MapC
     }
 
     @Override
-    public void onCursorChange(CefBrowser cefBrowser, int i) {
-
+    public boolean onCursorChange(CefBrowser cefBrowser, int i) {
+        return false;
     }
 
     @Override

@@ -83,7 +83,7 @@ public class PluginWebBrowser extends JavaPlugin {
                 sender.sendMessage("§b[Web Display] §cPermission Denied.");
                 return true;
             }
-            Optional<MapSession> session = CommonPlugin.getInstance().getMapController().getInfo(UUID.fromString(args[0])).sessions.stream().findFirst();
+            Optional<MapSession> session = CommonPlugin.getInstance().getMapController().getInfo(UUID.fromString(args[0])).getSessions().stream().findFirst();
             if (!session.isPresent()) {
                 sender.sendMessage("§cCan't find the webdisplay connected to this keyboard");
                 return true;

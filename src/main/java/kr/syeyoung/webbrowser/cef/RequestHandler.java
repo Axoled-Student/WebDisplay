@@ -14,9 +14,8 @@ import org.cef.handler.CefResourceHandler;
 import org.cef.handler.CefResourceRequestHandler;
 import org.cef.handler.CefResourceRequestHandlerAdapter;
 import org.cef.misc.BoolRef;
-import org.cef.network.CefPostData;
-import org.cef.network.CefPostDataElement;
 import org.cef.network.CefRequest;
+import org.cef.security.CefSSLInfo;
 
 import java.awt.*;
 
@@ -30,6 +29,11 @@ public class RequestHandler extends CefResourceRequestHandlerAdapter implements 
     @Override
     public boolean onBeforeBrowse(CefBrowser browser, CefFrame frame, CefRequest request,
                                   boolean user_gesture, boolean is_redirect) {
+        return false;
+    }
+
+    @Override
+    public boolean onOpenURLFromTab(CefBrowser browser, CefFrame frame, String target_url, boolean user_gesture) {
         return false;
     }
 
@@ -57,13 +61,8 @@ public class RequestHandler extends CefResourceRequestHandlerAdapter implements 
         return false;
     }
 
-    public void onPluginCrashed(CefBrowser browser, String pluginPath) {
-        System.out.println("Plugin " + pluginPath + "CRASHED");
-    }
-
-    @Override
     public boolean onCertificateError(CefBrowser browser, ErrorCode cert_error, String request_url,
-                                      CefCallback callback) {
+                                      CefSSLInfo sslInfo, CefCallback callback) {
         return false;
     }
 

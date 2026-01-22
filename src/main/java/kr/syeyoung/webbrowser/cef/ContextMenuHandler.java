@@ -9,6 +9,7 @@ import org.cef.browser.CefFrame;
 import org.cef.callback.CefContextMenuParams;
 import org.cef.callback.CefMenuModel;
 import org.cef.callback.CefMenuModel.MenuId;
+import org.cef.callback.CefRunContextMenuCallback;
 import org.cef.handler.CefContextMenuHandler;
 
 import java.awt.*;
@@ -86,6 +87,11 @@ public class ContextMenuHandler implements CefContextMenuHandler {
                 }
                 return false;
         }
+    }
+
+    @Override
+    public boolean runContextMenu(CefBrowser browser, CefFrame frame, CefContextMenuParams params, CefMenuModel model, CefRunContextMenuCallback callback) {
+        return false;
     }
 
     @Override

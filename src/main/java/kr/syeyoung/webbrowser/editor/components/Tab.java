@@ -9,7 +9,6 @@ import kr.syeyoung.webbrowser.util.DataUri;
 import lombok.Getter;
 import org.cef.browser.CefBrowser;
 import org.cef.browser.CefBrowserOsrWithHandler;
-import org.cef.browser.CefRendering;
 import org.cef.browser.CefFrame;
 import org.cef.browser.CefMessageRouter;
 import org.cef.handler.CefDisplayHandlerAdapter;
@@ -60,8 +59,10 @@ public class Tab extends MapWidget {
 
         addressBar = new AddressBar(cefBrowser, mapBrowser);
         statusBar = new StatusBar();
-        renderer = new BrowserRenderer(cefBrowser);
-        renderer.attachBrowser(cefBrowser);
+        if (renderer == null) {
+            renderer = new BrowserRenderer(cefBrowser);
+            renderer.attachBrowser(cefBrowser);
+        }
         cefBrowser.createImmediately();
     }
 
@@ -101,13 +102,16 @@ public class Tab extends MapWidget {
         if (cefBrowser != null) return;
 
         // Create the browser.
+        BrowserRenderer renderer = new BrowserRenderer();
         this.cefBrowser = new CefBrowserOsrWithHandler(
                 mapBrowser.getCefClient(),
                 url,
                 null,
-                new CefRendering.CefRenderingWithHandler(new BrowserRenderer.PlaceholderRenderHandler(), BrowserRenderer.dummy),
+                BrowserRenderer.createRendererHandle(renderer),
                 BrowserRenderer.dummy,
                 null);
+        renderer.attachBrowser(cefBrowser);
+        this.renderer = renderer;
     }
 
 

@@ -73,6 +73,10 @@
             <id>jogamp</id>
             <url>https://jogamp.org/deployment/maven/</url>
         </repository>
+        <repository>
+            <id>jogamp-aliyun</id>
+            <url>https://maven.aliyun.com/repository/jogamp</url>
+        </repository>
     </repositories>
 
 

@@ -138,7 +138,6 @@ public class Keyboard {
 
     public KeyEvent createKeyEvent(int event, int keyCode, char keyChar, int extended,int primaryUnicode, int rawCode) {
         KeyEvent ev =  new KeyEvent(BrowserRenderer.dummy, event, System.currentTimeMillis(), getMask(), keyCode, keyChar, event != KeyEvent.KEY_TYPED ? KeyEvent.KEY_LOCATION_STANDARD : KeyEvent.KEY_LOCATION_UNKNOWN);
-        ev.setExtendedKeyCode(extended);
 
         if (keyChar == '\b' && f != null && event != KeyEvent.KEY_TYPED) {
             try {
